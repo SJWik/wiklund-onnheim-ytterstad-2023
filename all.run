@@ -1,0 +1,181 @@
+reset;
+load amplcsv.dll;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns off the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # supresses elimination of variables by substitution
+option show_stats 1;
+model case1a.mod;
+data all.dat;
+solve;
+display " case1a";
+display X;
+display X_avg;
+display mean_revenue;
+#table xout OUT "amplcsv" "xoutcase1a.csv": X;
+#write table xout;
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns off the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # supresses elimination of variables by substitution
+option show_stats 1;
+model case1bb.mod;
+data all.dat;
+solve;
+display " case1b";
+display X;
+display X_avg;
+display max_yearly_cost_vs_budget;
+display mean_revenue;
+
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns off the presolver
+option pl_linearize 1;  # supresses transformation of piecewise linear terms
+option substout 1;    # supresses elimination of variables by substitution
+option show_stats 1;
+model case1c.mod;
+data all.dat;
+solve;
+display " case1c";
+display X;
+display X_avg;
+display max_yearly_cost_vs_budget;
+display mean_revenue;
+display{i in INVESTMENT_YEARS} costs[i]/pFinance[i, "budget"];
+
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns off the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # supresses elimination of variables by substitution
+option show_stats 1;
+model case2a.mod;
+data all.dat;
+solve;
+display " case2a";
+display revenues;
+display X;
+display X_avg;
+display revenues;
+# display {i in INVESTMENT_YEARS}:
+# pFinance[i, "currRevenue"] +
+# sum {j in 1 .. i} 
+# (
+#     X[j,"Research"] * pRevenue[i-j+1,"Research"]+
+#     X[j,"Acquisition"] * pRevenue[i-j+1,"Acquisition"]+
+#     X[j,"Licensing"] * pRevenue[i-j+1,"Licensing"]+
+#     X[j,"Partnering"] * pRevenue[i-j+1,"Partnering"]
+# ),
+# pFinance [i, "revTarget"];
+
+
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns on the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # enable elimination of variables by substitution
+option show_stats 1;
+model case2bb.mod;
+data all.dat;
+option relax_integrality 1;
+solve;
+option relax_integrality 0;
+solve;
+display " case2b";
+display X;
+display X_avg;
+display max_yearly_cost_vs_budget;
+
+
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns on the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # enable elimination of variables by substitution
+option show_stats 1;
+model case3a.mod;
+data all.dat;
+solve;
+display " case3a";
+display X;
+display X_avg;
+display mean_cost;
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns on the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # enable elimination of variables by substitution
+option show_stats 1;
+model case3bb.mod;
+data all.dat;
+solve;
+display " case3b";
+display X;
+display X_avg;
+display mean_cost;
+display min_revenue_vs_target_deficit;
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns on the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # enable elimination of variables by substitution
+option show_stats 1;
+model case4a.mod;
+data all.dat;
+solve;
+display " case4a";
+display X;
+display X_avg;
+
+reset;
+# option solver minos;
+option solver cplex;
+option presolve 1;   #--- turns on the presolver
+option pl_linearize 0;  # supresses transformation of piecewise linear terms
+option substout 1;    # enable elimination of variables by substitution
+option show_stats 1;
+model case4bb.mod;
+data all.dat;
+solve;
+display " case4b";
+display X;
+display X_avg;
+display mean_cost;
+display min_revenue_vs_target_deficit;
+
+#Magnus÷: this is some modified problem that I played around with.
+#reset;
+## option solver minos;
+#option solver cplex;
+#option presolve 1;   #--- turns off the presolver
+#option pl_linearize 0;  # supresses transformation of piecewise linear terms
+#option substout 1;    # supresses elimination of variables by substitution
+#option show_stats 1;
+#model case6bb.mod;
+#data all.dat;
+#solve;
+#display " case5b";
+#display X;
+#display X_avg;
+#display mean_cost;
+#display min_revenue_ratio;
+#display{i in INVESTMENT_YEARS} (revenues[i] / pFinance[i,"revTarget"] ) - 1;
+
+
